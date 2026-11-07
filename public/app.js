@@ -1,11 +1,13 @@
 // Hexaterra — cliente (interfaz, red y sondeo del estado).
 import * as E from './engine.js';
 import { BoardView } from './board.js';
+import { installSprites } from './pixel.js';
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ri = (k, cls = '') => `<svg class="ri ${cls}" viewBox="0 0 24 24"><use href="#r-${k}"/></svg>`;
 const icon = (id, cls = 'mini') => `<svg class="${cls}" viewBox="0 0 24 24"><use href="#${id}"/></svg>`;
+const spr = (id) => `<svg viewBox="0 0 24 24"><use href="#${id}"/></svg>`;
 const colorHex = (id) => (E.COLORS.find((c) => c.id === id) || E.COLORS[0]).hex;
 const costHtml = (cost) => `<span class="cost">${E.RES.flatMap((k) => Array(cost[k] || 0).fill(ri(k))).join('')}</span>`;
 const resHtml = (r) => E.RES.filter((k) => r[k] > 0).map((k) => `<b>${r[k]}</b>${ri(k)}`).join(' ') || '—';
@@ -339,9 +341,12 @@ async function confirmSel() {
 
 function renderPlayers() {
   const v = S.view, me = v.you, wait = E.waitingOn(v);
+  const goal = Math.min(v.settings.vp, 20);
+  const bar = (n) => `<div class="vpbar" title="${n} de ${v.settings.vp} puntos">${Array.from({ length: goal }, (_, k) => `<i class="${k < n ? 'on' : ''}"></i>`).join('')}</div>`;
   $('#players').innerHTML = v.players.map((p, i) => `
     <button class="pchip${wait.includes(i) ? ' active' : ''}${i === me ? ' me' : ''}" style="--pc:${colorHex(p.color)}" data-do="sheet" data-sheet="player" data-p="${i}">
       <div class="pname">${esc(p.name)}</div>
+      ${bar(p.vp)}
       <div class="pstats">
         <b class="vp">${icon('i-star')}${p.vp}</b>
         <span title="Cartas de recurso">${icon('i-cards')}${p.resCount}</span>
@@ -454,7 +459,7 @@ function renderHand() {
   const v = S.view, me = v.you, P = v.players[me];
   const rates = E.portRates(v, me);
   $('#hand').innerHTML = E.RES.map((k) => `
-    <div class="rcard res-${k}${P.res[k] ? '' : ' zero'}">
+    <div class="rcard res-${k}${P.res[k] ? '' : ' zero'}" title="${E.RES_NAME[k]}">
       ${rates[k] < 4 ? `<span class="rate">${rates[k]}:1</span>` : ''}
       <svg viewBox="0 0 24 24"><use href="#r-${k}"/></svg>
       <div class="cnt">${P.res[k]}</div><span class="rn">${E.RES_NAME[k]}</span>
@@ -463,23 +468,23 @@ function renderHand() {
 
 function renderActions() {
   const v = S.view, me = v.you;
-  let pr = { label: 'Esperando', ic: '⏳', dis: true };
+  let pr = { label: 'Esperando', ic: 'i-hourglass', dis: true };
   if (v.phase === 'play') {
     if (v.special) {
-      if (v.special.order[v.special.i] === me) pr = { label: 'Pasar', ic: '⏭', dis: false };
+      if (v.special.order[v.special.i] === me) pr = { label: 'Pasar', ic: 'i-next', dis: false };
     } else if (v.turn.p === me) {
       pr = v.turn.rolled
-        ? { label: 'Terminar turno', ic: '⏭', dis: !!v.pending }
-        : { label: 'Tirar dados', ic: '🎲', dis: !!v.pending, pulse: !v.pending };
+        ? { label: 'Terminar turno', ic: 'i-next', dis: !!v.pending }
+        : { label: 'Tirar dados', ic: 'i-dice', dis: !!v.pending, pulse: !v.pending };
     }
-  } else if (v.phase === 'setup') pr = { label: 'Colocación', ic: '🏠', dis: true };
-  else if (v.phase === 'ended') pr = { label: 'Resultados', ic: '🏆', dis: false, act: 'showEnd' };
+  } else if (v.phase === 'setup') pr = { label: 'Colocación', ic: 'i-house', dis: true };
+  else if (v.phase === 'ended') pr = { label: 'Resultados', ic: 'i-trophy', dis: false, act: 'showEnd' };
   const nDev = (v.players[me].dev || []).length;
   $('#actions').innerHTML = `
-    <button class="act primary${pr.pulse ? ' pulse' : ''}" data-do="${pr.act || 'primary'}" ${pr.dis ? 'disabled' : ''}><span class="ic">${pr.ic}</span>${pr.label}</button>
-    <button class="act" data-do="sheet" data-sheet="build" ${canBuildNow() ? '' : 'disabled'}><span class="ic">🔨</span>Construir</button>
-    <button class="act" data-do="sheet" data-sheet="trade" ${canTradeNow() ? '' : 'disabled'}><span class="ic">🤝</span>Comerciar</button>
-    <button class="act" data-do="sheet" data-sheet="cards"><span class="ic">🃏</span>Cartas${nDev ? `<span class="count">${nDev}</span>` : ''}</button>`;
+    <button class="act primary${pr.pulse ? ' pulse' : ''}" data-do="${pr.act || 'primary'}" ${pr.dis ? 'disabled' : ''}><span class="ic" style="color:${colorHex(v.players[me].color)}">${spr(pr.ic)}</span><span class="lbl">${pr.label}</span></button>
+    <button class="act" data-do="sheet" data-sheet="build" ${canBuildNow() ? '' : 'disabled'}><span class="ic">${spr('i-hammer')}</span><span class="lbl">Construir</span></button>
+    <button class="act" data-do="sheet" data-sheet="trade" ${canTradeNow() ? '' : 'disabled'}><span class="ic">${spr('i-trade')}</span><span class="lbl">Comerciar</span></button>
+    <button class="act" data-do="sheet" data-sheet="cards"><span class="ic">${spr('i-dev')}</span><span class="lbl">Cartas</span>${nDev ? `<span class="count">${nDev}</span>` : ''}</button>`;
 }
 
 function logHtml(n) {
@@ -501,7 +506,7 @@ function renderEnd() {
     };
   }).sort((a, b) => b.q.vp - a.q.vp);
   el.innerHTML = `<div class="end-card">
-    <div class="trophy">🏆</div>
+    <div class="trophy">${spr('i-trophy')}</div>
     <h2>¡${esc(v.players[v.winner].name)} gana!</h2>
     <table class="score">
       <tr><th>Jugador</th><th>Pobl.</th><th>Ciud.</th><th>Ruta</th><th>Ejérc.</th><th>Cartas PV</th><th>Total</th></tr>
@@ -928,6 +933,7 @@ $('#codeInput').addEventListener('input', (e) => {
 
 // ------------------------------------------------------------ arranque
 function init() {
+  installSprites();
   board = new BoardView($('#board'), onBoardTap);
   S.wake = localStorage.getItem('hexaterra.wake') !== '0';
   const params = new URLSearchParams(location.search);

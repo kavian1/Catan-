@@ -21,12 +21,12 @@ export const DEV_DESC = {
   vp: 'Vale 1 punto de victoria. Permanece oculta y cuenta automáticamente.',
 };
 export const COLORS = [
-  { id: 'red', name: 'Rojo', hex: '#e2453c' },
-  { id: 'blue', name: 'Azul', hex: '#3a7be0' },
-  { id: 'orange', name: 'Naranja', hex: '#f39228' },
-  { id: 'white', name: 'Blanco', hex: '#f4f0e6' },
-  { id: 'green', name: 'Verde', hex: '#36a85a' },
-  { id: 'purple', name: 'Morado', hex: '#9a5ad8' },
+  { id: 'red', name: 'Rojo', hex: '#ff4f73' },
+  { id: 'blue', name: 'Azul', hex: '#4f8dff' },
+  { id: 'orange', name: 'Naranja', hex: '#ff9f3f' },
+  { id: 'white', name: 'Blanco', hex: '#ffffff' },
+  { id: 'green', name: 'Verde', hex: '#22c97a' },
+  { id: 'purple', name: 'Morado', hex: '#b06bff' },
 ];
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 6;

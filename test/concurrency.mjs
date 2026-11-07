@@ -33,7 +33,8 @@ const res = await Promise.all([
 ]);
 const errs = res.filter((r) => r.status !== 200).map((r) => r.body.error);
 const st2 = await call('state', null, h2.body.token, 'GET', { room: r2, v: 0 });
-const colors = st2.body.view.players.map((p) => p.color);
+const byName = Object.fromEntries(st2.body.view.players.map((p) => [p.name, p.color]));
+const colors = ['H2', 'A2', 'B2'].map((n) => byName[n]);
 console.log('colores:', colors.join(','), '| errores:', errs.length, '| conflictos resueltos:', store.conflicts);
 if (errs.length || colors.join(',') !== 'white,green,purple') process.exit(1);
 // un token inválido no puede actuar

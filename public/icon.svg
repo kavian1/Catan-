@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <rect width="120" height="120" rx="26" fill="#0c2233"/>
-  <g transform="translate(0 8)" stroke="#0c2233" stroke-width="3" stroke-linejoin="round">
-    <polygon points="60,4 82,17 82,43 60,56 38,43 38,17" fill="#3d9a47"/>
-    <polygon points="38,43 60,56 60,82 38,95 16,82 16,56" fill="#e3b33c"/>
-    <polygon points="82,43 104,56 104,82 82,95 60,82 60,56" fill="#d66a3c"/>
-    <circle cx="60" cy="56" r="9" fill="#f6ecd2"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 16 16" shape-rendering="crispEdges"><rect x="-2" y="-2" width="16" height="16" fill="#ffd84d"/><path fill="#2d1b4e" d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM10 2h1v1h-1zM0 3h1v1h-1zM11 3h1v1h-1zM0 4h1v1h-1zM11 4h1v1h-1zM0 5h1v1h-1zM11 5h1v1h-1zM0 6h1v1h-1zM11 6h1v1h-1zM1 7h1v1h-1zM10 7h1v1h-1zM2 8h2v1h-2zM8 8h2v1h-2zM4 9h1v1h-1zM7 9h1v1h-1zM4 10h1v1h-1zM7 10h1v1h-1zM3 11h6v1h-6z"/><path fill="#3fdc84" d="M3 1h2v1h-2zM7 1h2v1h-2zM2 2h2v1h-2zM5 2h5v1h-5zM1 3h8v1h-8zM10 3h1v1h-1zM1 4h1v1h-1zM3 4h7v1h-7zM1 5h7v1h-7zM9 5h1v1h-1zM1 6h8v1h-8zM2 7h1v1h-1zM4 7h4v1h-4z"/><path fill="#a6f7c8" d="M5 1h2v1h-2zM4 2h1v1h-1zM2 4h1v1h-1z"/><path fill="#1fae64" d="M9 3h1v1h-1zM10 4h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM9 6h2v1h-2zM3 7h1v1h-1zM8 7h2v1h-2zM4 8h4v1h-4z"/><path fill="#c9783f" d="M5 9h1v1h-1zM5 10h1v1h-1z"/><path fill="#8a4a22" d="M6 9h1v1h-1zM6 10h1v1h-1z"/></svg>
